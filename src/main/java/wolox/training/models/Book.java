@@ -34,10 +34,13 @@ public class Book {
     private String pages;
 
     @Column(nullable = false)
-    private String ISBN;
+    private String isbn;
+    
+
+    public Book(){}
 
 
-    public Book(String genre, String author, String image, String title, String subtitle, String publisher, String year, String pages, String ISBN) {
+    public Book(String genre, String author, String image, String title, String subtitle, String publisher, String year, String pages, String isbn) {
         this.genre = genre;
         this.author = author;
         this.image = image;
@@ -46,8 +49,10 @@ public class Book {
         this.publisher = publisher;
         this.year = year;
         this.pages = pages;
-        this.ISBN = ISBN;
+        this.isbn = isbn;
     }
+
+
 
 
     public long getId() {
@@ -122,11 +127,11 @@ public class Book {
         this.pages = pages;
     }
 
-    public String getISBN() {
-        return ISBN;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }
