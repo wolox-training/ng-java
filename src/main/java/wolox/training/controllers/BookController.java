@@ -5,9 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import wolox.training.exception.BookIdMismatchException;
+import wolox.training.exception.BookNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
 
+import java.util.Optional;
 
 
 @Controller
@@ -23,12 +26,9 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public Book findOne(@PathVariable Long id ) {
-        return bookRepository.findOnById(id);
-    }
-
-    public Book findOne(@PathVariable String author ) {
-        return bookRepository.findOneByAuthor(author);
+    public Book findOne(@PathVariable Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(BookNotFoundException::new);
     }
 
     @PostMapping
@@ -39,13 +39,18 @@ public class BookController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        bookRepository.findOnById(id);
+        bookRepository.findById(id)
+                .orElseThrow(BookNotFoundException::new);
         bookRepository.deleteById(id);
     }
 
     @PutMapping("/{id}")
     public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
-        bookRepository.findOnById(id);
+        if (book.getId() != id) {
+            throw new BookIdMismatchException();
+        }
+        bookRepository.findById(id)
+                .orElseThrow(BookNotFoundException::new);
         return bookRepository.save(book);
     }
 
