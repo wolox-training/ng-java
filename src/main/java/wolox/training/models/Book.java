@@ -35,7 +35,7 @@ public class Book {
 
     @Column(nullable = false)
     private String isbn;
-    
+
 
     public Book(){}
 
