@@ -20,8 +20,7 @@ public class User {
     @Column(nullable = false)
     private LocalDate birthDate;
 
-    @OneToMany
-    @JoinColumn(name = "book_id")
+    @ManyToMany(cascade = CascadeType.ALL)
     private Collection<Book> books;
 
     public User() {}
