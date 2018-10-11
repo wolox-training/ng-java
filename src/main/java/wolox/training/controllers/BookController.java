@@ -9,6 +9,7 @@ import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
 
 @Controller
+@RequestMapping(value="/book")
 public class BookController {
 
     @Autowired
