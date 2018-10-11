@@ -45,41 +45,37 @@ public class UserController {
         return userRepository.save(user);
     }
 
-
+    @RequestMapping(value = "/addBooks")
     public void addBooks(Book book, Long idUser){
         User userAux= findOne(idUser);
-        Boolean encontrado=false;
+        Boolean finded=false;
         for (Book bookAux: userAux.getBooks()) {
 
-            if(bookAux.getId() == book.getId()){
-               encontrado = true;
+            if(bookAux.getIsbn() == book.getIsbn()){
+                finded = true;
+                throw new RuntimeException();
             }
         }
 
-        if(encontrado){
-            throw new RuntimeException();
-        }
-        else {
-            userAux.addBook(book);
-        }
+        userAux.addBook(book);
+
     }
 
-
+    @RequestMapping(value = "/deleteBooks")
     public void deleteBooks(Book book, Long idUser){
         User userAux= findOne(idUser);
-        Boolean encontrado=true;
+        Boolean finded=true;
         for (Book bookAux: userAux.getBooks()) {
 
-            if(bookAux.getId() == book.getId()){
-                encontrado = true;
+            if(bookAux.getIsbn() == book.getIsbn()){
                 userAux.deleteBook(book);
             }
             else{
-                encontrado=false;
+                finded=false;
             }
         }
 
-        if(!encontrado){
+        if(!finded){
             throw new RuntimeException();
 
         }
