@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
 
-@Controller
-@RequestMapping(value="/book")
+@RestController
+@RequestMapping("/api/books")
 public class BookController {
 
     @Autowired
