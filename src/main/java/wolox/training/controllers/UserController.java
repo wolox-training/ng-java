@@ -62,20 +62,15 @@ public class UserController {
     @PostMapping("/deleteBooks")
     public void deleteBooks(Book book, Long idUser){
         User userAux= findOne(idUser);
-        Boolean finded=true;
         for (Book bookAux: userAux.getBooks()) {
 
             if(bookAux.getIsbn() == book.getIsbn()){
                 userAux.deleteBook(book);
+		return;
             }
-            else{
-                finded=false;
-            }
-        }
-
-        if(!finded){
-            throw new RuntimeException();
 
         }
+
+        throw new RuntimeException();
     }
 }
