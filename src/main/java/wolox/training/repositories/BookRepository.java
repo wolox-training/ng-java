@@ -1,6 +1,5 @@
 package wolox.training.repositories;
 
-
 import org.springframework.data.repository.CrudRepository;
 import wolox.training.models.Book;
 
