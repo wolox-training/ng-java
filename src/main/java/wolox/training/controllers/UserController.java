@@ -45,7 +45,7 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @GetMapping("/addBooks")
+    @PostMapping("/addBooks")
     public void addBooks(Book book, Long idUser){
         User userAux= findOne(idUser);
         for (Book bookAux: userAux.getBooks()) {
@@ -59,7 +59,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/deleteBooks")
+    @PostMapping("/deleteBooks")
     public void deleteBooks(Book book, Long idUser){
         User userAux= findOne(idUser);
         Boolean finded=true;
