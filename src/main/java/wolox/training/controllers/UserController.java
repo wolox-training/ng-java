@@ -45,14 +45,12 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @RequestMapping(value = "/addBooks")
+    @GetMapping("/addBooks")
     public void addBooks(Book book, Long idUser){
         User userAux= findOne(idUser);
-        Boolean finded=false;
         for (Book bookAux: userAux.getBooks()) {
 
             if(bookAux.getIsbn() == book.getIsbn()){
-                finded = true;
                 throw new RuntimeException();
             }
         }
@@ -61,7 +59,7 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "/deleteBooks")
+    @GetMapping("/deleteBooks")
     public void deleteBooks(Book book, Long idUser){
         User userAux= findOne(idUser);
         Boolean finded=true;
