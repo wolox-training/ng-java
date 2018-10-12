@@ -9,8 +9,8 @@ import wolox.training.models.Book;
 import wolox.training.models.User;
 import wolox.training.repositories.UserRepository;
 
-@Controller
-@RequestMapping(value = "/user")
+@RestController
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
@@ -66,7 +66,7 @@ public class UserController {
 
             if(bookAux.getIsbn() == book.getIsbn()){
                 userAux.deleteBook(book);
-		return;
+                return;
             }
 
         }
