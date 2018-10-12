@@ -2,9 +2,9 @@ package wolox.training.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.models.Book;
 import wolox.training.models.User;
 import wolox.training.repositories.UserRepository;
@@ -53,7 +53,7 @@ public class UserController {
 
 
     @PutMapping("/addBooks/{idUser}/{idBook}")
-    public User addBooks(@RequestBody User user, @PathVariable("idUser") Long idUser, @PathVariable("idBook") Long idBook){
+    public User addBooks(@RequestBody User user, @PathVariable("idUser") Long idUser, @PathVariable("idBook") Long idBook) throws BookAlreadyOwnedException{
 
         if (user.getId() != idUser) {
             throw new RuntimeException();
@@ -67,7 +67,7 @@ public class UserController {
         for (Book b: userAux.getBooks()) {
 
             if(bookAux.getIsbn() == b.getIsbn()){
-                throw new RuntimeException();
+                throw new BookAlreadyOwnedException("Error: The book you are trying to add already exists.");
             }
         }
 
