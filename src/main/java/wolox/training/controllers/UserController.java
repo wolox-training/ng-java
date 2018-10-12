@@ -2,12 +2,15 @@ package wolox.training.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import wolox.training.models.Book;
 import wolox.training.models.User;
 import wolox.training.repositories.UserRepository;
+import wolox.training.repositories.BookRepository;
+
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -15,6 +18,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BookRepository bookRepository;
+
 
     @GetMapping("/{id}")
     public User findOne(@PathVariable Long id) {
@@ -45,32 +51,53 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @PostMapping("/addBooks")
-    public void addBooks(Book book, Long idUser){
-        User userAux= findOne(idUser);
-        for (Book bookAux: userAux.getBooks()) {
 
-            if(bookAux.getIsbn() == book.getIsbn()){
+    @PutMapping("/addBooks/{idUser}/{idBook}")
+    public User addBooks(@RequestBody User user, @PathVariable("idUser") Long idUser, @PathVariable("idBook") Long idBook){
+
+        if (user.getId() != idUser) {
+            throw new RuntimeException();
+        }
+
+        User userAux= userRepository.findById(idUser).orElseThrow(RuntimeException::new);
+
+        Book bookAux= bookRepository.findById(idBook).orElseThrow(RuntimeException::new);
+
+
+        for (Book b: userAux.getBooks()) {
+
+            if(bookAux.getIsbn() == b.getIsbn()){
                 throw new RuntimeException();
             }
         }
 
-        userAux.addBook(book);
+        userAux.addBook(bookAux);
+        return updateUser(userAux,idUser);
 
     }
 
-    @PostMapping("/deleteBooks")
-    public void deleteBooks(Book book, Long idUser){
-        User userAux= findOne(idUser);
-        for (Book bookAux: userAux.getBooks()) {
+    @PutMapping("/deleteBooks/{idUser}/{idBook}")
+    public User deleteBooks(@RequestBody User user, @PathVariable("idUser") Long idUser, @PathVariable("idBook") Long idBook){
 
-            if(bookAux.getIsbn() == book.getIsbn()){
-                userAux.deleteBook(book);
-                return;
+        if (user.getId() != idUser) {
+            throw new RuntimeException();
+        }
+
+        User userAux= userRepository.findById(idUser).orElseThrow(RuntimeException::new);
+        Book bookAux= bookRepository.findById(idBook).orElseThrow(RuntimeException::new);
+
+
+        for (Book b: userAux.getBooks()) {
+
+            if(bookAux.getIsbn() == b.getIsbn()){
+                userAux.deleteBook(bookAux);
+                return updateUser(userAux,idUser);
+
             }
-
         }
 
         throw new RuntimeException();
+
     }
+
 }
