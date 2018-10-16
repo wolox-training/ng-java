@@ -53,11 +53,7 @@ public class UserController {
 
 
     @PutMapping("/addBooks/{idUser}/{idBook}")
-    public User addBooks(@RequestBody User user, @PathVariable("idUser") Long idUser, @PathVariable("idBook") Long idBook) throws BookAlreadyOwnedException{
-
-        if (user.getId() != idUser) {
-            throw new RuntimeException();
-        }
+    public User addBooks(@PathVariable("idUser") Long idUser, @PathVariable("idBook") Long idBook) throws BookAlreadyOwnedException{
 
         User userAux= userRepository.findById(idUser).orElseThrow(RuntimeException::new);
 
@@ -72,16 +68,12 @@ public class UserController {
         }
 
         userAux.addBook(bookAux);
-        return updateUser(userAux,idUser);
+        return userRepository.save(userAux);
 
     }
 
     @PutMapping("/deleteBooks/{idUser}/{idBook}")
-    public User deleteBooks(@RequestBody User user, @PathVariable("idUser") Long idUser, @PathVariable("idBook") Long idBook){
-
-        if (user.getId() != idUser) {
-            throw new RuntimeException();
-        }
+    public User deleteBooks(@PathVariable("idUser") Long idUser, @PathVariable("idBook") Long idBook){
 
         User userAux= userRepository.findById(idUser).orElseThrow(RuntimeException::new);
         Book bookAux= bookRepository.findById(idBook).orElseThrow(RuntimeException::new);
@@ -91,7 +83,7 @@ public class UserController {
 
             if(bookAux.getIsbn() == b.getIsbn()){
                 userAux.deleteBook(bookAux);
-                return updateUser(userAux,idUser);
+                return userRepository.save(userAux);
 
             }
         }
