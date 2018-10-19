@@ -36,7 +36,6 @@ public class OpenLibraryService {
         BookDao book;
 
         if (json.length() == 0){
-            //throw new RuntimeException("This book not exist");
             book = null;
         }
         else {
