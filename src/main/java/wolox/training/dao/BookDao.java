@@ -12,6 +12,8 @@ public class BookDao {
     private String numberOfPages;
     private ArrayList<String> authors = new ArrayList<String>();
 
+    public BookDao() {
+    }
 
     public BookDao(String isbn, String title, String subtitle, String publishers, String publish_Date, String numbreOfPages) {
         this.isbn = isbn;

@@ -65,14 +65,11 @@ public class BookController {
     }
 
     @PostMapping("findLibrary/{isbn}")
-    public Book findOneInLibraryWithISBN(@PathVariable String isbn) throws JSONException {
+    public BookDao findOneInLibraryWithISBN(@PathVariable String isbn) throws JSONException {
 
         BookDao bookDao = this.serviceLibrary.bookInfo(isbn);
 
-        Book book = new Book(bookDao);
-
-        return bookRepository.save(book);
-
+        return bookDao;
     }
 
     @PostMapping("findLocalLibrary/{isbn}")
@@ -84,9 +81,17 @@ public class BookController {
             sRes.setStatus(HttpStatus.OK.value());
         }
         else{
-            book=findOneInLibraryWithISBN(isbn);
-            sRes.setStatus(HttpStatus.CREATED.value());
+            BookDao bookDao=findOneInLibraryWithISBN(isbn);
+            if(findOneInLibraryWithISBN(isbn)!= null){
+                sRes.setStatus(HttpStatus.CREATED.value());
+                book = new Book(bookDao);
+                bookRepository.save(book);
+            }
+            else{
+                sRes.setStatus(HttpStatus.NOT_FOUND.value());
+            }
         }
+
 
         return book;
     }

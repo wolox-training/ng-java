@@ -33,9 +33,16 @@ public class OpenLibraryService {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         String bookInfo = restTemplate.getForObject("https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data", String.class,isbn);
         json = new JSONObject(bookInfo);
+        BookDao book;
 
-        BookDao book = new BookDao(isbn,convertJson(isbn,TITLE), convertJson(isbn,SUBTITLE),convertJson(isbn,PUBLISHERS),convertJson(isbn, PUBLISH_DATE),convertJson(isbn,NUMBER_OF_PAGES));
-        book.getAuthors().add(convertJsonArray(isbn,AUTHORS,NAME));
+        if (json.length() == 0){
+            //throw new RuntimeException("This book not exist");
+            book = null;
+        }
+        else {
+            book = new BookDao(isbn, convertJson(isbn, TITLE), convertJson(isbn, SUBTITLE), convertJson(isbn, PUBLISHERS), convertJson(isbn, PUBLISH_DATE), convertJson(isbn, NUMBER_OF_PAGES));
+            book.getAuthors().add(convertJsonArray(isbn, AUTHORS, NAME));
+        }
 
         return book;
     }
