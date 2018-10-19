@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import wolox.training.dao.BookDao;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,13 +11,13 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false)
+    @Column()
     private String genre;
 
     @Column(nullable = false)
     private String author;
 
-    @Column(nullable = false)
+    @Column()
     private String image;
 
     @Column(nullable = false)
@@ -38,6 +40,17 @@ public class Book {
 
 
     public Book(){}
+
+
+    public Book(BookDao bookDao) {
+        this.author = bookDao.getAuthors().get(0);
+        this.title = bookDao.getTitle();
+        this.subtitle = bookDao.getSubtitle();
+        this.publisher = bookDao.getPublishers();
+        this.year = bookDao.getPublish_Date();
+        this.pages = bookDao.getNumberOfPages();
+        this.isbn = bookDao.getIsbn();
+    }
 
 
     public Book(String genre, String author, String image, String title, String subtitle, String publisher, String year, String pages, String isbn) {
@@ -133,5 +146,21 @@ public class Book {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", genre='" + genre + '\'' +
+                ", author='" + author + '\'' +
+                ", image='" + image + '\'' +
+                ", title='" + title + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", year='" + year + '\'' +
+                ", pages='" + pages + '\'' +
+                ", isbn='" + isbn + '\'' +
+                '}';
     }
 }
