@@ -7,30 +7,37 @@ import org.springframework.web.client.RestTemplate;
 import wolox.training.dao.BookDao;
 
 
+
 public class OpenLibraryService {
 
-    private JSONObject  json;
+    private static final String TITLE = "title";
+    private static final String SUBTITLE = "subtitle";
+    private static final String PUBLISHERS = "publishers";
+    private static final String PUBLISH_DATE = "publish_date";
+    private static final String NUMBER_OF_PAGES = "number_of_pages";
+    private static final String AUTHORS = "authors";
+    private static final String NAME = "name";
 
+    private JSONObject json;
+
+
+    public String convertJson(String isbn, String label ) throws JSONException {
+        return(json.getJSONObject("ISBN:"+isbn).getString(label));
+    }
+
+    public String convertJsonArray(String isbn, String label1, String label2) throws JSONException {
+        return(json.getJSONObject("ISBN:"+isbn).getJSONArray(label1).getJSONObject(0).getString(label2));
+    }
 
     public BookDao bookInfo(String isbn) throws JSONException {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         String bookInfo = restTemplate.getForObject("https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data", String.class,isbn);
         json = new JSONObject(bookInfo);
 
-
-
-        String title = json.getJSONObject("ISBN:"+isbn).getString("title");
-        String subtitle = json.getJSONObject("ISBN:"+isbn).getString("subtitle");
-        String publishers= json.getJSONObject("ISBN:"+isbn).getString("publishers");
-        String publish_date = json.getJSONObject("ISBN:"+isbn).getString("publish_date");
-        String number_of_pages= json.getJSONObject("ISBN:"+isbn).getString("number_of_pages");
-        String authors = json.getJSONObject("ISBN:"+isbn).getJSONArray("authors").getJSONObject(0).getString("name");
-
-        BookDao book = new BookDao(isbn,title, subtitle,publishers,publish_date,number_of_pages);
-        book.getAuthors().add(authors);
+        BookDao book = new BookDao(isbn,convertJson(isbn,TITLE), convertJson(isbn,SUBTITLE),convertJson(isbn,PUBLISHERS),convertJson(isbn, PUBLISH_DATE),convertJson(isbn,NUMBER_OF_PAGES));
+        book.getAuthors().add(convertJsonArray(isbn,AUTHORS,NAME));
 
         return book;
-
     }
 
 }
