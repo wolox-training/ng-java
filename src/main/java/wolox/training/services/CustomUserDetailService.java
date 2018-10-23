@@ -1,4 +1,4 @@
-package wolox.training.Services;
+package wolox.training.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
