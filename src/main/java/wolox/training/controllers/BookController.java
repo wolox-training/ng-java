@@ -3,6 +3,7 @@ package wolox.training.controllers;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import wolox.training.Services.OpenLibraryService;
@@ -19,10 +20,10 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
-    private OpenLibraryService serviceLibrary= new OpenLibraryService();
+    private OpenLibraryService serviceLibrary = new OpenLibraryService();
 
     @GetMapping("/")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
+    public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
         model.addAttribute("name", name);
         return "greeting";
     }
@@ -39,14 +40,17 @@ public class BookController {
         return bookRepository.save(book);
     }
 
-    @DeleteMapping("delete/{id}")
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("admin/delete/{id}")
     public void delete(@PathVariable Long id) {
         bookRepository.findById(id)
                 .orElseThrow(RuntimeException::new);
         bookRepository.deleteById(id);
     }
 
-    @PutMapping("update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("admin/update/{id}")
     public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
         if (book.getId() != id) {
             throw new RuntimeException();
@@ -55,9 +59,6 @@ public class BookController {
                 .orElseThrow(RuntimeException::new);
         return bookRepository.save(book);
     }
-
-
-
 
     @GetMapping("findLocal/{isbn}")
     public Book findOneWithISBN(@PathVariable String isbn) {
@@ -72,22 +73,21 @@ public class BookController {
         return bookDao;
     }
 
-    @PostMapping("findLocalLibrary/{isbn}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("admin/findLocalLibrary/{isbn}")
     public Book findOneInLocalOrLibraryWithISBN(HttpServletResponse sRes, @PathVariable String isbn) throws JSONException {
 
         Book book = findOneWithISBN(isbn);
 
-        if(findOneWithISBN(isbn) != null){
+        if (findOneWithISBN(isbn) != null) {
             sRes.setStatus(HttpStatus.OK.value());
-        }
-        else{
-            BookDao bookDao=findOneInLibraryWithISBN(isbn);
-            if(findOneInLibraryWithISBN(isbn)!= null){
+        } else {
+            BookDao bookDao = findOneInLibraryWithISBN(isbn);
+            if (findOneInLibraryWithISBN(isbn) != null) {
                 sRes.setStatus(HttpStatus.CREATED.value());
                 book = new Book(bookDao);
                 bookRepository.save(book);
-            }
-            else{
+            } else {
                 sRes.setStatus(HttpStatus.NOT_FOUND.value());
             }
         }
