@@ -1,7 +1,5 @@
 package wolox.training.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
@@ -35,15 +33,16 @@ public class User {
     @ManyToMany(cascade = CascadeType.ALL)
     private Collection<Book> books;
 
-    public User() {}
+    public User() {
+    }
 
 
-    public User(String userName,String password,String name, LocalDate birthDate, boolean isAdmin) {
+    public User(String userName, String password, String name, LocalDate birthDate, boolean isAdmin) {
         this.userName = userName;
-        this.password= encryptPassword(password);
+        this.password = encryptPassword(password);
         this.name = name;
         this.birthDate = birthDate;
-        this.isAdmin= isAdmin;
+        this.isAdmin = isAdmin;
     }
 
     public long getId() {
@@ -86,11 +85,11 @@ public class User {
         this.books = books;
     }
 
-    public void addBook(Book book){
+    public void addBook(Book book) {
         this.books.add(book);
     }
 
-    public void deleteBook(Book book){
+    public void deleteBook(Book book) {
         this.books.remove(book);
     }
 
@@ -98,13 +97,13 @@ public class User {
         return password;
     }
 
-    public String encryptPassword(String pass){
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.encode(pass);
-    }
-
     public void setPassword(String password) {
         this.password = encryptPassword(password);
+    }
+
+    public String encryptPassword(String pass) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.encode(pass);
     }
 
     public boolean getIsAdmin() {
@@ -113,5 +112,15 @@ public class User {
 
     public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", name='" + name + '\'' +
+                ", birthDate=" + birthDate +
+                '}';
     }
 }
