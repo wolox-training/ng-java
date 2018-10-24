@@ -1,5 +1,9 @@
 package wolox.training.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -11,14 +15,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false)
+    @Column(unique = true)
     private String userName;
 
-    @Column(nullable = false)
+    //@JsonIgnore
+    @Column(unique = true)
+    private String password;
+
+    @Column
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate birthDate;
+
+    @Column
+    private boolean isAdmin;
+
 
     @ManyToMany(cascade = CascadeType.ALL)
     private Collection<Book> books;
@@ -26,10 +38,12 @@ public class User {
     public User() {}
 
 
-    public User(String userName, String name, LocalDate birthDate) {
+    public User(String userName,String password,String name, LocalDate birthDate, boolean isAdmin) {
         this.userName = userName;
+        this.password= encryptPassword(password);
         this.name = name;
         this.birthDate = birthDate;
+        this.isAdmin= isAdmin;
     }
 
     public long getId() {
@@ -78,5 +92,26 @@ public class User {
 
     public void deleteBook(Book book){
         this.books.remove(book);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String encryptPassword(String pass){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.encode(pass);
+    }
+
+    public void setPassword(String password) {
+        this.password = encryptPassword(password);
+    }
+
+    public boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }
