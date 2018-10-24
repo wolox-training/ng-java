@@ -2,6 +2,8 @@ package wolox.training.controllers;
 
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
@@ -31,8 +33,7 @@ public class BookController {
 
     @GetMapping("/findAllBooks/pgs/{publisher}/{genre}/{year}")
     public List<Book> findByPublisherAndGenreAndYear(@PathVariable String publisher, @PathVariable String genre, @PathVariable String year) {
-        List<Book> books = bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year);
-        return books;
+        return bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year, PageRequest.of(0, 4, Sort.Direction.ASC, "title")).getContent();
     }
 
     @GetMapping("findBook/{id}")

@@ -2,6 +2,8 @@ package wolox.training.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,7 @@ public class UserController {
 
     @GetMapping("/findAllUsers/bdn/{birthDate1}/{birthDate2}/{userName}")
     public List<User> findByBirthDateBetweenAndUserNameContaining(@PathVariable String birthDate1, @PathVariable String birthDate2, @PathVariable String userName) {
-        List<User> users = userRepository.findByBirthDateBetweenAndUserNameContainingIgnoreCase(LocalDate.parse(birthDate1), LocalDate.parse(birthDate2), userName);
-        return users;
+        return userRepository.findByBirthDateBetweenAndUserNameContainingIgnoreCase(LocalDate.parse(birthDate1), LocalDate.parse(birthDate2), userName, PageRequest.of(0, 4, Sort.Direction.ASC, "userName")).getContent();
     }
 
     @GetMapping("findUser/{id}")
