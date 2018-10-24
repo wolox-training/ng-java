@@ -11,6 +11,8 @@ import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
 
+import java.security.Principal;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,6 +21,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
     private BookRepository bookRepository;
 
 
@@ -92,5 +95,12 @@ public class UserController {
         throw new RuntimeException();
 
     }
+
+    @RequestMapping(value = "/username", method = RequestMethod.GET)
+    @ResponseBody
+    public String currentUserName(Principal principal) {
+        return "User Name:" + principal.getName();
+    }
+
 
 }
