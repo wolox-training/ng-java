@@ -12,6 +12,8 @@ import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.List;
 
 
 @RestController
@@ -24,6 +26,12 @@ public class UserController {
     @Autowired
     private BookRepository bookRepository;
 
+
+    @GetMapping("/findAllUsers/bdn/{birthDate1}/{birthDate2}/{userName}")
+    public List<User> findByBirthDateBetweenAndUserNameContaining(@PathVariable String birthDate1, @PathVariable String birthDate2, @PathVariable String userName) {
+        List<User> users = userRepository.findByBirthDateBetweenAndUserNameContainingIgnoreCase(LocalDate.parse(birthDate1), LocalDate.parse(birthDate2), userName);
+        return users;
+    }
 
     @GetMapping("findUser/{id}")
     public User findOne(@PathVariable Long id) {
