@@ -12,6 +12,7 @@ import wolox.training.repositories.BookRepository;
 import wolox.training.services.OpenLibraryService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
@@ -26,6 +27,12 @@ public class BookController {
     public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
         model.addAttribute("name", name);
         return "greeting";
+    }
+
+    @GetMapping("/findAllBooks/pgs/{publisher}/{genre}/{year}")
+    public List<Book> findByPublisherAndGenreAndYear(@PathVariable String publisher, @PathVariable String genre, @PathVariable String year) {
+        List<Book> books = bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year);
+        return books;
     }
 
     @GetMapping("findBook/{id}")
