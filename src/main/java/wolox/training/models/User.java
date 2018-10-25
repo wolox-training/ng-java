@@ -8,9 +8,11 @@ import java.util.Collection;
 
 
 @Entity
+@Table(name = "\"User\"")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ")
+    @SequenceGenerator(name = "USER_SEQ", sequenceName = "USER_SEQ")
     private long id;
 
     @Column(unique = true)
