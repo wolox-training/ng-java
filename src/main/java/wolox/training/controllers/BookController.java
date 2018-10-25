@@ -31,7 +31,7 @@ public class BookController {
         return "greeting";
     }
 
-    @GetMapping("/findAllBooks/pgs/{publisher}/{genre}/{year}")
+    @GetMapping("/findAllBooks/pgy/{publisher}/{genre}/{year}")
     public List<Book> findByPublisherAndGenreAndYear(@PathVariable String publisher, @PathVariable String genre, @PathVariable String year) {
         return bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year, PageRequest.of(0, 4, Sort.Direction.ASC, "title")).getContent();
     }

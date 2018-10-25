@@ -8,7 +8,8 @@ import javax.persistence.*;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOOK_SEQ")
+    @SequenceGenerator(name = "BOOK_SEQ", sequenceName = "BOOK_SEQ")
     private long id;
 
     @Column()
@@ -39,7 +40,8 @@ public class Book {
     private String isbn;
 
 
-    public Book(){}
+    public Book() {
+    }
 
 
     public Book(BookDao bookDao) {
@@ -64,8 +66,6 @@ public class Book {
         this.pages = pages;
         this.isbn = isbn;
     }
-
-
 
 
     public long getId() {
