@@ -32,4 +32,6 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.postgresql:postgresql:42.2.5')
+    compile('org.junit.jupiter:junit-jupiter-api:5.3.1')
+   
 }

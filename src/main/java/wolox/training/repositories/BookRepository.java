@@ -6,9 +6,11 @@ import org.springframework.data.repository.CrudRepository;
 import wolox.training.models.Book;
 
 public interface BookRepository extends CrudRepository<Book, Long> {
-    Page<Book> findByPublisherAndGenreAndYear(String publisher, String genre, String year, Pageable pageable);
 
-    Book findOneByAuthor(String author);
+  Page<Book> findByPublisherAndGenreAndYear(String publisher, String genre, String year,
+      Pageable pageable);
 
-    Book findOneByIsbn(String isbn);
+  Book findOneByAuthor(String author);
+
+  Book findOneByIsbn(String isbn);
 }
